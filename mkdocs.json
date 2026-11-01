@@ -1,0 +1,50 @@
+{
+    "site_name": "GitOps @ Samir IT",
+    "plugins": [
+        "techdocs-core"
+    ],
+    "nav": [
+        {
+            "Index": "./index.md"
+        },
+        {
+            "Overview": "./overview.md"
+        },
+        {
+            "Deployment": [
+                {
+                    "Dev": "deployment/dev.md"
+                },
+                {
+                    "Index": "deployment/index.md"
+                },
+                {
+                    "Prod": "deployment/prod.md"
+                }
+            ]
+        },
+        {
+            "Getting Started": [
+                {
+                    "Installation": "getting-started/installation.md"
+                },
+                {
+                    "Prerequisites": "getting-started/prerequisites.md"
+                }
+            ]
+        },
+        {
+            "Refrence": [
+                {
+                    "Api": "refrence/api.md"
+                },
+                {
+                    "Fag": "refrence/fag.md"
+                },
+                {
+                    "Index": "refrence/index.md"
+                }
+            ]
+        }
+    ]
+}

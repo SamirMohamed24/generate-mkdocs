@@ -1,0 +1,23 @@
+site_name: GitOps @ Samir IT
+plugins:
+- techdocs-core
+nav:
+- Index: ./index.md
+- Overview: ./overview.md
+- Refrence:
+  - Api: refrence/api.md
+  - Index: refrence/index.md
+  - Fag: refrence/fag.md
+- Getting Started:
+  - Installation: getting-started/installation.md
+  - Prerequisites: getting-started/prerequisites.md
+- Deployment:
+  - Dev: deployment/dev.md
+  - Prod: deployment/prod.md
+  - Index: deployment/index.md
+  - Prod1: deployment/prod1.md
+- Asd:
+  - Dev: asd/dev.md
+  - Prod: asd/prod.md
+  - Index: asd/index.md
+  - Asd: asd/asd.md

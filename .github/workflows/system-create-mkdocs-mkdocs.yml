@@ -1,0 +1,131 @@
+name: Run Generate MkDocs Script Daily and on Push
+
+permissions:
+  contents: write
+  actions: write
+
+on:
+  # Schedule the workflow to run daily at midnight UTC
+  schedule:
+    - cron: '0 0 * * *'
+  workflow_dispatch:
+  
+  # Trigger the workflow on push events to the main branch
+  push:
+    branches:
+      - main
+    paths:
+      - 'docs/**'  
+
+jobs:
+  generate-mkdocs:
+    runs-on: ubuntu-latest  # Use the latest Ubuntu runner
+    defaults:
+      run:
+        working-directory: ./scripts/generate-mkdocs  # Set default working directory
+
+    steps:
+      - name: Checkout Repository  # Pull the latest version of the repository
+        uses: actions/checkout@v3
+
+      - name: Set up Python  # Install the specified version of Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install Python Dependencies  # Ensure required Python packages are installed
+        run: |
+          python -m pip install --upgrade pip
+          pip install pyyaml
+
+      - name: Run JSON to YAML Generation  # Execute the Python script that converts JSON to YAML
+        run: python ./generate-mkdocs.py  # The path to working-directory
+
+      - name: Copy mkdocs.yml to Root  # Copy the generated mkdocs.yml to the root directory
+        run: cp ./mkdocs.yml ../../mkdocs.yml
+
+      - name: Commit Updated mkdocs.yml in Root  # Commit and push the updated mkdocs.yml in the root directory
+        run: |
+          git config --global user.email "altoumibrahim11@gmail.com"
+          git config --global user.name "SamirMohamed24"
+          git add ../../mkdocs.yml  # Only add the root mkdocs.yml
+          git commit -m "Updated mkdocs.yml [Automated Run]" || echo "No changes to commit"
+          git push || echo "Nothing to push"
+
+
+##########################################################################
+##########################################################################
+###we use this workflow if we have pull requset policy apply in github action ###
+##########################################################################
+##########################################################################
+# name: Run Generate MkDocs Script
+
+# permissions:
+#   contents: write
+#   actions: write
+
+# on:
+#   schedule:
+#     - cron: '0 0 * * *'
+#   workflow_dispatch:
+#   push:
+#     branches:
+#       - main
+#     paths:
+#       - 'docs/**'
+
+# jobs:
+#   commit-changes:
+#     runs-on: ubuntu-latest
+#     defaults:
+#       run:
+#         working-directory: ./scripts/generate-mkdocs
+
+#     steps:
+#       - name: Checkout Repository
+#         uses: actions/checkout@v3
+#         with:
+#           fetch-depth: 0
+#           token: ${{ secrets.WORKFLOW_TOKEN }}
+
+#       - name: Set up Python
+#         uses: actions/setup-python@v4
+#         with:
+#           python-version: '3.12.3'
+
+#       - name: Install Python Dependencies
+#         run: |
+#           python -m pip install --upgrade pip
+#           pip install pyyaml
+#           pip show pyyaml
+
+#       - name: Run JSON to YAML Generation
+#         run: python ./generate-mkdocs.py
+
+#       - name: Copy mkdocs.yml Content to Root File
+#         run: |
+#           cat ./mkdocs.yml > ../../mkdocs.yml
+#           echo "Copied mkdocs.yml content to root file."
+
+#       - name: Check for Changes Before Pushing to Main
+#         id: has-changes
+#         run: |
+#           git add -A
+#           if git diff --cached --quiet --exit-code; then
+#             echo "No changes detected. Skipping push."
+#             echo "has-changes=false" >> $GITHUB_ENV
+#             echo "has-changes=false" >> "$GITHUB_OUTPUT"
+#           else
+#             echo "Changes detected! Pushing changes to main."
+#             echo "has-changes=true" >> $GITHUB_ENV
+#             echo "has-changes=true" >> "$GITHUB_OUTPUT"
+#           fi
+
+#       - name: Commit and Push Changes
+#         if: steps.has-changes.outputs.has-changes == 'true'
+#         run: |
+#           git config --local user.email "github-actions@github.com"
+#           git config --local user.name "github-actions"
+#           git commit -m "Updated mkdocs files [Automated Run]" || echo "No changes to commit"
+#           git pull --rebase
+#           git push 
